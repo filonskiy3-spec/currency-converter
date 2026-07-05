@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Pro</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(135deg, #ea6666, #ff0000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 340px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #00c6ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        button:hover {
+            background: #0096c7;
+        }
+        
+        .result {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>💱 Currency Pro</h1>
+
+        <input id="amount" type="number" placeholder="Amount">
+
+        <select id="from">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
+        <option>JPY</option>
+        <option>RUB</option>
+    </select>
+
+        <select id="to">
+        <option>EUR</option>
+        <option>USD</option>
+        <option>GBP</option>
+        <option>JPY</option>
+        <option>RUB</option>
+    </select>
+
+        <button onclick="convert()">Convert</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function convert() {
+            const amount = document.getElementById("amount").value;
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+
+            const url = `https://open.er-api.com/v6/latest/${from}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                const rate = data.rates[to];
+                const result = amount * rate;
+
+                document.getElementById("result").innerHTML =
+                    `${amount} ${from} = <b>${result.toFixed(2)} ${to}</b>`;
+            } catch (e) {
+                document.getElementById("result").innerHTML =
+                    "Ошибка загрузки курса";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
